@@ -272,14 +272,14 @@ function Select-Session($data, [string]$query) {
             $count = if ($words.Count) { "$($list.Count) de $($all.Count)" } else { '' }
             if ($query) { Write-Seg $sb @(@(' ❯ ', $Accent), @($query, '1'), @('█', $Accent), @(("   $count"), $Dim)) }
             else        { Write-Seg $sb @(@(' ❯ ', $Accent), @('█', $Accent), @(' escribe para filtrar por título, prompt o carpeta', $Dim)) }
-            Write-Seg $sb @(@(('─' * $w), $Accent))
+            Write-Seg $sb (, @(('─' * $w), $Accent))
 
             # lista
             for ($i = $top; $i -lt $top + $rows; $i++) {
                 if ($i -ge $list.Count) {
                     if ($i -eq 0) {
                         $msg = if ($all.Count) { '   Nada coincide con la búsqueda.' } else { "   No hay sesiones de $($t.Name)." }
-                        Write-Seg $sb @(@($msg, $Dim))
+                        Write-Seg $sb (, @($msg, $Dim))
                     } else { Write-Seg $sb @() }
                     Write-Seg $sb @(); continue
                 }
@@ -297,7 +297,7 @@ function Select-Session($data, [string]$query) {
             }
 
             # detalle de la seleccionada
-            Write-Seg $sb @(@(('─' * $w), '38;5;238'))
+            Write-Seg $sb (, @(('─' * $w), '38;5;238'))
             if ($list.Count) {
                 $s = $list[$sel]
                 $when = [DateTime]::new($s.SortTicks, 'Utc').ToLocalTime().ToString('dd/MM/yyyy HH:mm')

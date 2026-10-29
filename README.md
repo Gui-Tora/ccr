@@ -1,77 +1,81 @@
 # ccr
 
-Selector de sesiones de **Claude Code** y **Codex** para PowerShell. Lista todas tus conversaciones de todos los proyectos, eliges una y te lleva a su carpeta y la retoma.
+**English** · [Español](README.es.md)
 
-Se acabó acordarse de en qué carpeta abriste aquel chat para poder hacer `/resume`.
+A session picker for **Claude Code** and **Codex** in PowerShell. It lists your conversations from every project, and when you pick one it jumps to that folder and resumes it.
 
-<!-- Captura: ejecuta `ccr -Demo` (datos inventados) y guárdala como docs/demo.png -->
-<!-- ![ccr](docs/demo.png) -->
+No more trying to remember which folder you started that chat in just to run `/resume`.
 
-## Características
+![Claude Code tab](docs/claude.png)
+![Codex tab](docs/codex.png)
 
-- Sesiones de Claude Code y Codex en dos pestañas (`←` / `→`).
-- Título, último prompt, carpeta y hace cuánto la usaste.
-- Búsqueda instantánea por título, prompt o ruta (varias palabras = todas deben coincidir).
-- `Enter` hace `cd` a la carpeta del proyecto y lanza `claude --resume <id>` o `codex resume <id>`.
-- Rápido: lee solo el principio y el final de cada transcript y guarda una caché; solo relee lo que ha cambiado.
-- Sin dependencias: un único script de PowerShell. Funciona en Windows PowerShell 5.1 y PowerShell 7.
+## Features
 
-## Instalación
+- Claude Code and Codex sessions in two tabs (`←` / `→`).
+- Title, last prompt, project folder and how long ago you used it.
+- Instant search by title, prompt or path (multiple words = all must match).
+- `Enter` changes to the project folder and runs `claude --resume <id>` or `codex resume <id>`.
+- Fast: reads only the start and end of each transcript and keeps a cache, so only changed files are re-read.
+- No dependencies: a single PowerShell script. Works on Windows PowerShell 5.1 and PowerShell 7.
+
+> The interface is currently in Spanish.
+
+## Install
 
 ```powershell
-git clone https://github.com/<usuario>/ccr.git
+git clone https://github.com/<user>/ccr.git
 cd ccr
 .\install.ps1
 ```
 
-Abre una terminal nueva y escribe `ccr`.
+Open a new terminal and type `ccr`.
 
-`install.ps1` solo añade esta línea a tu `$PROFILE` (y la sustituye si ya existía):
-
-```powershell
-function ccr { & "C:\ruta\a\ccr\ccr.ps1" @args }
-```
-
-> Si PowerShell no deja ejecutar scripts: `Set-ExecutionPolicy -Scope CurrentUser RemoteSigned`
-
-## Uso
+`install.ps1` only adds this line to your `$PROFILE` (replacing it if it already exists):
 
 ```powershell
-ccr              # abre el selector
-ccr backend      # abre el selector ya filtrado
-ccr -Refresh     # reconstruye la caché desde cero
-ccr -Demo        # datos inventados, para capturas sin enseñar tus chats
+function ccr { & "C:\path\to\ccr\ccr.ps1" @args }
 ```
 
-| Tecla | Acción |
+> If PowerShell refuses to run scripts: `Set-ExecutionPolicy -Scope CurrentUser RemoteSigned`
+
+## Usage
+
+```powershell
+ccr              # open the picker
+ccr backend      # open it already filtered
+ccr -Refresh     # rebuild the cache from scratch
+ccr -Demo        # fake data, for screenshots without showing your own chats
+```
+
+| Key | Action |
 |---|---|
-| escribir | filtrar |
-| `←` `→` `Tab` | cambiar entre Claude Code y Codex |
-| `↑` `↓` `PgUp` `PgDn` `Inicio` `Fin` | moverse |
-| `Enter` | ir a la carpeta y retomar la sesión |
-| `Esc` | salir |
+| type | filter |
+| `←` `→` `Tab` | switch between Claude Code and Codex |
+| `↑` `↓` `PgUp` `PgDn` `Home` `End` | move |
+| `Enter` | go to the folder and resume the session |
+| `Esc` | quit |
 
-## De dónde saca los datos
+## Where the data comes from
 
 | | Claude Code | Codex |
 |---|---|---|
-| Sesiones | `~/.claude/projects/*/<id>.jsonl` | `~/.codex/sessions/AAAA/MM/DD/rollout-*-<id>.jsonl` |
-| Carpeta | campo `cwd` del transcript | `session_meta.cwd` |
-| Título | `custom-title` → `ai-title` → último prompt | `session_index.jsonl` → primer mensaje |
-| Último prompt | `last-prompt` | `history.jsonl` → último mensaje del usuario |
+| Sessions | `~/.claude/projects/*/<id>.jsonl` | `~/.codex/sessions/YYYY/MM/DD/rollout-*-<id>.jsonl` |
+| Folder | transcript `cwd` field | `session_meta.cwd` |
+| Title | `custom-title` → `ai-title` → last prompt | `session_index.jsonl` → first message |
+| Last prompt | `last-prompt` | `history.jsonl` → last user message |
 
-Respeta `CLAUDE_CONFIG_DIR` y `CODEX_HOME` si los tienes definidos. La caché vive en `%LOCALAPPDATA%\cc-sessions\`.
+`CLAUDE_CONFIG_DIR` and `CODEX_HOME` are respected if set. The cache lives in `%LOCALAPPDATA%\cc-sessions\`.
 
-`ccr` solo **lee**: nunca modifica ni borra tus sesiones.
+`ccr` is **read-only**: it never modifies or deletes your sessions.
 
-## Aviso
+## Caveat
 
-Lee formatos internos de Claude Code y Codex que no están documentados ni son estables. Si alguna actualización los cambia, puede que algo deje de salir hasta que se actualice el script.
+It reads internal Claude Code and Codex file formats that are neither documented nor stable. If an update changes them, some sessions may stop showing up until the script is updated.
 
-## Desarrollo
+## Development
 
-`ccr.ps1` debe guardarse como **UTF-8 con BOM**: Windows PowerShell 5.1 lee los scripts sin BOM como ANSI y los caracteres como `→`, `─` o los acentos rompen el parseo. El `.editorconfig` ya lo configura para los editores que lo respetan.
+`ccr.ps1` must be saved as **UTF-8 with BOM**: Windows PowerShell 5.1 reads BOM-less scripts as ANSI, and characters like `→`, `─` or accented letters break parsing. The included `.editorconfig` sets this for editors that honor it.
 
-## Licencia
+## License
 
 MIT
