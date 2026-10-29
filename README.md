@@ -23,7 +23,7 @@ No more trying to remember which folder you started that chat in just to run `/r
 ## Install
 
 ```powershell
-git clone https://github.com/<user>/ccr.git
+git clone https://github.com/Gui-Tora/ccr.git
 cd ccr
 .\install.ps1
 ```

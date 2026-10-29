@@ -21,7 +21,7 @@ Se acabó acordarse de en qué carpeta abriste aquel chat para poder hacer `/res
 ## Instalación
 
 ```powershell
-git clone https://github.com/<usuario>/ccr.git
+git clone https://github.com/Gui-Tora/ccr.git
 cd ccr
 .\install.ps1
 ```
